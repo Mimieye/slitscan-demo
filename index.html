@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <title>Slit Scan Video</title>
+
+        <style>
+            body {
+                margin: 0;
+                overflow: hidden;
+            }
+            canvas, video {
+                display: block;
+            }
+
+            #wrapper {
+                position: relative;
+                width: 100vw;
+                height: 100vh;
+                background-color: #eee;
+            }
+
+            #upload {
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 0;
+            }
+
+            #main {
+                position: absolute;
+                top: 0;
+                right: 0;
+                left: 0;
+                bottom: 0;
+                pointer-events: none;
+            }
+
+            #video {
+                position: absolute;
+                opacity: 0.4;
+            }
+
+            #size {
+                position: absolute;
+                opacity: 0;
+            }
+        </style>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/p5.min.js" integrity="sha512-WJXVjqeINVpi5XXJ2jn0BSCfp0y80IKrYh731gLRnkAS9TKc5KNt/OfLtu+fCueqdWniouJ1ubM+VI/hbo7POQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    </head>
+    <body>
+        <div id="wrapper">
+            <video id="size" mute></video>
+            <label for='upload' class='button'>
+                <input id="upload" type="file" accept="video/mp4, video/x-m4v, video/*"/>
+            </label>
+            <div id="video"></div>
+            <div id="main"></div>
+        </div>
+
+        <!-- <script>
+            (function() {
+                var script = document.createElement("script");
+                script.onload = function() {
+                var stats = new Stats();
+                document.body.appendChild(stats.dom);
+                requestAnimationFrame(function loop() {
+                    stats.update();
+                    requestAnimationFrame(loop);
+                });
+                };
+                script.src = "//mrdoob.github.io/stats.js/build/stats.min.js";
+                document.head.appendChild(script);
+            })();
+        </script> -->
+
+
+        <script>
+            let videoUrl, video, main;
+            // let size = document.getElementById("size");
+            let myp5;
+
+            let setting = {
+                frameRate: 60,
+                startPosition: 50,
+                slitWidth: 1,
+                direction: 0 // 0: left, 1: right, 2: bottom, 3: top
+            }
+
+            let s = (p) => {
+                p.setup = () => {
+                    p.frameRate(setting.frameRate);
+
+                    video = p.createVideo(videoUrl);
+                    video.parent("video");
+                    video.volume(0);
+                    video.loop();
+                    video.hide();
+                    main = p.createCanvas(
+                        window.innerWidth,
+                        window.innerHeight,
+                    );
+                    main.parent("main");
+                };
+
+
+                p.draw = () => {
+                    let mw = main.width;
+                    let mh = main.height;
+                    let vw = video.width;
+                    let vh = video.height;
+                    let scaleH = mh * vw / vh;
+                    let scaleW = mw * vh / vw;
+                    let pt = setting.startPosition / 100;
+                    let pt1 = 1 - pt;
+
+
+                    switch (setting.direction) {
+                        case 0:
+                            p.image(video,
+                                0,
+                                0,
+                                scaleH * pt,
+                                mh,
+                                0,
+                                0,
+                                vw * pt,
+                                vh
+                            );
+
+                            p.image(main,
+                                scaleH * pt,
+                                0,
+                                setting.slitWidth,
+                                mh,
+                                scaleH * pt - setting.slitWidth,
+                                0,
+                                setting.slitWidth,
+                                mh
+                            );
+                            p.image(main,
+                                scaleH * pt + setting.slitWidth,
+                                0,
+                                mw - scaleH * pt + setting.slitWidth,
+                                mh,
+                                scaleH * pt,
+                                0,
+                                mw - scaleH * pt + setting.slitWidth,
+                                mh
+                            );
+                            break;
+                        case 1:
+                            p.image(video,
+                                mw - scaleH * pt1,
+                                0,
+                                scaleH * pt1,
+                                mh,
+                                vw * pt,
+                                0,
+                                vw * pt1,
+                                vh
+                            );
+
+                            p.image(main,
+                                mw - scaleH * pt1 - setting.slitWidth,
+                                0,
+                                setting.slitWidth,
+                                mh,
+                                mw - scaleH * pt1 + setting.slitWidth,
+                                0,
+                                setting.slitWidth,
+                                mh
+                            );
+                            p.image(main,
+                                -setting.slitWidth,
+                                0,
+                                mw - scaleH * pt1 + setting.slitWidth,
+                                mh,
+                                0,
+                                0,
+                                mw - scaleH * pt1 + setting.slitWidth,
+                                mh
+                            );
+                            break;
+                        case 2:
+                            p.image(video,
+                                0,
+                                0,
+                                mw,
+                                scaleW * pt1,
+                                0,
+                                0,
+                                vw,
+                                vh * pt1,
+                            );
+
+                            p.image(main,
+                                0,
+                                scaleW * pt1,
+                                mw,
+                                setting.slitWidth,
+                                0,
+                                scaleW * pt1 - setting.slitWidth,
+                                mw,
+                                setting.slitWidth
+                            );
+                            p.image(main,
+                                0,
+                                scaleW * pt1 + setting.slitWidth,
+                                mw,
+                                mh - scaleW * pt1,
+                                0,
+                                scaleW * pt1,
+                                mw,
+                                mh - scaleW * pt1,
+                            );
+                            break;
+                        case 3:
+                            p.image(video,
+                                0,
+                                mh - scaleW * pt,
+                                mw,
+                                scaleW * pt,
+                                0,
+                                vh * pt1,
+                                vw,
+                                vh * pt,
+                            );
+
+                            p.image(main,
+                                0,
+                                mh - scaleW * pt - setting.slitWidth,
+                                mw,
+                                setting.slitWidth,
+                                0,
+                                mh - scaleW * pt,
+                                mw,
+                                setting.slitWidth
+                            );
+                            p.image(main,
+                                0,
+                                -setting.slitWidth,
+                                mw,
+                                mh - scaleW * pt,
+                                0,
+                                0,
+                                mw,
+                                mh - scaleW * pt,
+                            );
+                            break;
+                        default:
+                    }
+                };
+
+
+                p.windowResized = () => {
+                    main.size(
+                        window.innerWidth,
+                        window.innerHeight
+                    );
+                };
+            };
+
+
+
+            let playSelectedFile = function (event) {
+                event.preventDefault();
+                let file =  event.target.files[0];
+                let type = file.type;
+                let videoNode = document.getElementById('size');
+                let canPlay = videoNode.canPlayType(type);
+                canPlay = (canPlay === '' ? 'no' : canPlay);
+                let isError = canPlay === 'no';
+
+                if (isError) {
+                    return;
+                }
+
+                let fileURL = window.URL.createObjectURL(file);
+                videoNode.src = fileURL;
+                videoUrl = fileURL;
+
+                if (myp5) {
+                    video.pause();
+                    video.remove();
+                    video = null;
+                    myp5.remove();
+                    myp5 = null;
+                }
+                myp5 = new p5(s);
+            }
+
+            // gui.add(setting, "frameRate").onChange(value => {
+            //     video.pause();
+            //     video.remove();
+            //     video = null;
+            //     myp5.remove();
+            //     myp5 = null;
+            //     myp5 = new p5(s);
+            // });
+            // gui.add(setting, "startPosition", 1, 100, 1).onChange(value => {
+            // //     // video.pause();
+            // //     // video.remove();
+            // //     // video = null;
+            // //     // myp5.remove();
+            // //     // myp5 = null;
+            // //     // myp5 = new p5(s);
+            // });
+            // gui.add(setting, "slitWidth", 1, 100, 1).onChange(value => {
+            // // //     video.pause();
+            // // //     video.remove();
+            // // //     video = null;
+            // // //     myp5.remove();
+            // // //     myp5 = null;
+            // // //     myp5 = new p5(s);
+            // });
+            // gui.add(setting, "direction", 0, 3, 1).onChange(value => {
+            //     // video.pause();
+            //     // video.remove();
+            //     // video = null;
+            //     // myp5.remove();
+            //     // myp5 = null;
+            //     // myp5 = new p5(s);
+            // });
+
+            let inputNode = document.getElementById('upload');
+            inputNode.addEventListener('change', playSelectedFile, false);
+        </script>
+    </body>
+</html>
