@@ -53,7 +53,7 @@
             }
         </style>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/p5.min.js" integrity="sha512-WJXVjqeINVpi5XXJ2jn0BSCfp0y80IKrYh731gLRnkAS9TKc5KNt/OfLtu+fCueqdWniouJ1ubM+VI/hbo7POQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="/p5.js"></script>
     </head>
     <body>
         <div id="wrapper">
@@ -90,7 +90,7 @@
             let setting = {
                 frameRate: 60,
                 startPosition: 50,
-                slitWidth: 1,
+                slitWidth: 20,
                 direction: 0 // 0: left, 1: right, 2: bottom, 3: top
             }
 
@@ -145,12 +145,13 @@
                                 setting.slitWidth,
                                 mh
                             );
+
                             p.image(main,
                                 scaleH * pt + setting.slitWidth,
                                 0,
                                 mw - scaleH * pt + setting.slitWidth,
                                 mh,
-                                scaleH * pt,
+                                scaleH * pt - setting.slitWidth,
                                 0,
                                 mw - scaleH * pt + setting.slitWidth,
                                 mh
@@ -169,7 +170,7 @@
                             );
 
                             p.image(main,
-                                mw - scaleH * pt1 - setting.slitWidth,
+                                mw - scaleH * pt1,
                                 0,
                                 setting.slitWidth,
                                 mh,
@@ -178,6 +179,7 @@
                                 setting.slitWidth,
                                 mh
                             );
+
                             p.image(main,
                                 -setting.slitWidth,
                                 0,
@@ -268,8 +270,6 @@
                 };
             };
 
-
-
             let playSelectedFile = function (event) {
                 event.preventDefault();
                 let file =  event.target.files[0];
@@ -306,28 +306,28 @@
             //     myp5 = new p5(s);
             // });
             // gui.add(setting, "startPosition", 1, 100, 1).onChange(value => {
-            // //     // video.pause();
-            // //     // video.remove();
-            // //     // video = null;
-            // //     // myp5.remove();
-            // //     // myp5 = null;
-            // //     // myp5 = new p5(s);
+            //     video.pause();
+            //     video.remove();
+            //     video = null;
+            //     myp5.remove();
+            //     myp5 = null;
+            //     myp5 = new p5(s);
             // });
             // gui.add(setting, "slitWidth", 1, 100, 1).onChange(value => {
-            // // //     video.pause();
-            // // //     video.remove();
-            // // //     video = null;
-            // // //     myp5.remove();
-            // // //     myp5 = null;
-            // // //     myp5 = new p5(s);
+            //     video.pause();
+            //     video.remove();
+            //     video = null;
+            //     myp5.remove();
+            //     myp5 = null;
+            //     myp5 = new p5(s);
             // });
             // gui.add(setting, "direction", 0, 3, 1).onChange(value => {
-            //     // video.pause();
-            //     // video.remove();
-            //     // video = null;
-            //     // myp5.remove();
-            //     // myp5 = null;
-            //     // myp5 = new p5(s);
+            //     video.pause();
+            //     video.remove();
+            //     video = null;
+            //     myp5.remove();
+            //     myp5 = null;
+            //     myp5 = new p5(s);
             // });
 
             let inputNode = document.getElementById('upload');
