@@ -54,6 +54,7 @@
         </style>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/p5.min.js"></script>
+        <script type="text/javascript" src="dat.gui.min.js"></script>
     </head>
     <body>
         <div id="wrapper">
@@ -83,6 +84,7 @@
 
 
         <script>
+            const gui = new dat.GUI();
             let videoUrl, video, main;
             // let size = document.getElementById("size");
             let myp5;
@@ -297,38 +299,38 @@
                 myp5 = new p5(s);
             }
 
-            // gui.add(setting, "frameRate").onChange(value => {
-            //     video.pause();
-            //     video.remove();
-            //     video = null;
-            //     myp5.remove();
-            //     myp5 = null;
-            //     myp5 = new p5(s);
-            // });
-            // gui.add(setting, "startPosition", 1, 100, 1).onChange(value => {
-            //     video.pause();
-            //     video.remove();
-            //     video = null;
-            //     myp5.remove();
-            //     myp5 = null;
-            //     myp5 = new p5(s);
-            // });
-            // gui.add(setting, "slitWidth", 1, 100, 1).onChange(value => {
-            //     video.pause();
-            //     video.remove();
-            //     video = null;
-            //     myp5.remove();
-            //     myp5 = null;
-            //     myp5 = new p5(s);
-            // });
-            // gui.add(setting, "direction", 0, 3, 1).onChange(value => {
-            //     video.pause();
-            //     video.remove();
-            //     video = null;
-            //     myp5.remove();
-            //     myp5 = null;
-            //     myp5 = new p5(s);
-            // });
+            gui.add(setting, "frameRate").onChange(value => {
+                video.pause();
+                video.remove();
+                video = null;
+                myp5.remove();
+                myp5 = null;
+                myp5 = new p5(s);
+            });
+            gui.add(setting, "startPosition", 1, 100, 1).onChange(value => {
+                video.pause();
+                video.remove();
+                video = null;
+                myp5.remove();
+                myp5 = null;
+                myp5 = new p5(s);
+            });
+            gui.add(setting, "slitWidth", 1, 100, 1).onChange(value => {
+                video.pause();
+                video.remove();
+                video = null;
+                myp5.remove();
+                myp5 = null;
+                myp5 = new p5(s);
+            });
+            gui.add(setting, "direction", 0, 3, 1).onChange(value => {
+                video.pause();
+                video.remove();
+                video = null;
+                myp5.remove();
+                myp5 = null;
+                myp5 = new p5(s);
+            });
 
             let inputNode = document.getElementById('upload');
             inputNode.addEventListener('change', playSelectedFile, false);
